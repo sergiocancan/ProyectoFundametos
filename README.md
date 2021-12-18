@@ -5,3 +5,7 @@ Integrantes:
 - Manuel Martinez
 - Angelo Casas
 - Hans Burnmester
+En el repositorio se encuentra el URDF diseñado por nosotros y sus pruebas para:
+* Cinemática Directa
+* Cinemática Inversa
+* Cinemática Diferencial
