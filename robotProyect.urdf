@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+ 
+<robot name="robocov">
+ 
+  <!-- Colores del robot -->
+ 
+  <material name="green">
+    <color rgba="0 1 0 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+  <material name="red">
+    <color rgba="1 0 0 1"/>
+  </material>
+  <material name="pink">
+    <color rgba="0.6 0.2 0.6 1"/>
+  </material>
+ 
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.45" radius="0.18"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.225"/>
+      <material name="blue" />
+    </visual>
+  </link>
+ 
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.45"/>
+    <axis xyz="0 0 1" />
+    <limit effort="0" velocity="2.95" lower="-3.14" upper="3.14"/>
+  </joint>
+ 
+  <link name="link1">
+    <visual>
+      <geometry>
+        <cylinder length="0.32" radius="0.12"/>
+      </geometry>
+      <origin rpy="0 1.57 0" xyz="0.16 0 0"/>
+      <material name="green" />
+    </visual>
+  </link>
+ 
+  <joint name="joint2" type="revolute">
+    <parent link="linkcircular"/>
+    <child link="link2"/>
+    <origin xyz="0.320 0 0"/>
+    <axis xyz="0 1 0" />
+    <limit effort="0" velocity="2.5" lower="-1.57" upper="1.57"/>
+  </joint>
+ 
+ 
+    <link name="link2">
+    <visual>
+      <geometry>
+        <cylinder length="0.87" radius="0.12"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.45"/>
+      <material name="red" />
+    </visual>
+  </link>
+ 
+  <joint name="joint3" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0 0 0.870"/>
+    <axis xyz="0 -1 0" />
+    <limit effort="0" velocity="2.5" lower="-0.62" upper="0.62"/>
+  </joint>
+ 
+ 
+  <link name="link3">
+    <visual>
+      <geometry>
+        <cylinder length="0.24" radius="0.145"/>
+      </geometry>
+      <origin rpy="1.57 0 0" xyz="0 0 0"/>
+      <material name="pink" />
+    </visual>
+  </link>
+ 
+    <joint name="joint4" type="prismatic">
+    <parent link="link3"/>
+    <child link="link4"/>
+    <origin xyz="0 0 0.2"/>
+    <axis xyz="1 0 0" />
+    <limit effort="300" velocity="0.1" lower="-1.25" upper="-0.15"/>
+  </joint>
+ 
+  <link name="link4">
+    <visual>
+      <geometry>
+        <cylinder length="1.5" radius="0.035"/>
+      </geometry>
+      <origin rpy="0 1.57 0" xyz="0.75 0 -0.2"/>
+      <material name="blue" />
+    </visual>
+  </link>
+    <joint name="joint5" type="revolute">
+    <parent link="link4"/>
+    <child link="link5"/>
+    <origin xyz="1.5 0 -0.2"/>
+    <axis xyz="-1 0 0" />
+    <limit effort="0" velocity="4" lower="-3.14" upper="3.14"/>
+  </joint>
+    <link name="link5">
+    <visual>
+      <geometry>
+        <cylinder length="0.2" radius="0.06"/>
+      </geometry>
+      <origin rpy="0 1.57 0" xyz="0.1 0.0 -0.0"/>
+      <material name="green" />
+    </visual>
+  </link>
+  <joint name="joint6" type="revolute">
+    <parent link="link5"/>
+    <child link="link6"/>
+    <origin xyz="0.2 0 0"/>
+    <axis xyz="0 1 0" />
+    <limit effort="0" velocity="5" lower="-2.36" upper="2.36"/>
+  </joint>
+  <link name="link6">
+    <visual>
+      <geometry>
+        <cylinder length="0.12" radius="0.06"/>
+      </geometry>
+      <origin rpy="1.57 0 0" xyz="0 0 0"/>
+      <material name="red" />
+    </visual>
+  </link>
+  <joint name="joint7" type="revolute">
+    <parent link="link6"/>
+    <child link="link7"/>
+    <origin xyz="0 0 0"/>
+    <axis xyz="1 0 0" />
+    <limit effort="0" velocity="5" lower="-6.28" upper="6.28"/>
+  </joint>  
+  <link name="link7">
+    <visual>
+      <geometry>
+        <cylinder length="0.2" radius="0.06"/>
+      </geometry>
+      <origin rpy="0 1.57 0" xyz="0.1 0 0"/>
+      <material name="blue" />
+    </visual>
+  </link>  
+  <joint name="joint_extra1" type="fixed">
+    <parent link="link1"/>
+    <child link="linkcircular"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  
+ 
+  <link name="linkcircular">
+    <visual>
+      <geometry>
+        <sphere radius="0.12"/> 
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.32 0 0"/>
+      <material name="red"/>
+    </visual>
+  </link> 
+ 
+</robot>

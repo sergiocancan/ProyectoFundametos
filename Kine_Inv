@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+ 
+import rospy
+from sensor_msgs.msg import JointState
+from markers import *
+from functions import *
+ 
+ 
+rospy.init_node("testInvKine")
+print('starting motion ... ')
+pub = rospy.Publisher('joint_states', JointState, queue_size=1000)
+xcurrent = open("/tmp/xcurrent.txt", "w")                
+xdesired = open("/tmp/xdesired.txt", "w")
+qcurrent = open("/tmp/q.txt", "w")
+error = open("/tmp/error.txt", "w")
+bmarker      = BallMarker(color['RED'])
+bmarker_des  = BallMarker(color['GREEN'])
+ 
+# Joint names
+jnames = ['joint1', 'joint2', 'joint3','joint4', 'joint5', 'joint6', 'joint7']
+# Desired position
+xd = np.array([2,1,0.5])
+# Initial configuration
+q0 = np.array([0, 0, 0, 0, 0, 0,0])
+# Inverse kinematics
+#q = ikine_urdf(xd, q0)
+ 
+# Resulting position (end effector with respect to the base link)
+#T = fkine_urdf(q)
+#print('Obtained value:\n', np.round(T,3))
+ 
+# Red marker shows the achieved position
+#bmarker.xyz(T[0:3,3])
+# Green marker shows the desired position
+bmarker_des.xyz(xd)
+ 
+# Objeto (mensaje) de tipo JointState
+jstate = JointState()
+# Asignar valores al mensaje
+jstate.header.stamp = rospy.Time.now()
+jstate.name = jnames
+# Add the head joint value (with value 0) to the joints
+epsilon  = 0.001
+max_iter = 1000
+delta    = 0.00001
+ 
+q  = copy(q0)
+ee = []
+ite=0
+xdes=xd
+jstate.position = q
+ 
+# Loop rate (in Hz)
+rate = rospy.Rate(1)
+# Continuous execution loop
+while not rospy.is_shutdown():
+    # Current time (needed for ROS)
+    jstate.header.stamp = rospy.Time.now()
+    J = jacobian_urdf(q, delta)
+    x = fkine_urdf(q)[0:3,3]
+    bmarker.xyz(x)
+    e = xdes-x
+    q = q + np.dot(np.linalg.pinv(J), e)
+    # Norma del error
+    enorm = np.linalg.norm(e)
+    ee.append(enorm)    # Almacena los errores
+    ite=ite+1
+    if (np.linalg.norm(e) < epsilon):
+        print('numero de iteraciones: ',ite)
+        break
+    xcurrent.write(str(x[0])+' '+str(x[1]) +' '+str(x[2])+'\n')
+    xdesired.write(str(xdes[0])+' '+str(xdes[1])+' '+str(xdes[2])+'\n')
+    qcurrent.write(str(q[0])+" "+str(q[1])+" "+str(q[2])+" "+str(q[3])+" "+
+             str(q[4])+" "+str(q[5])+"\n"+str(q[6])+"\n")
+    error.write(str(e[0])+' '+str(e[1]) +' '+str(e[2])+'\n')
+    # Publish the message
+    jstate.position = q
+    pub.publish(jstate)
+    bmarker.publish()
+    bmarker_des.publish()
+    # Wait for the next iteration
+    rate.sleep()
+print('ending motion ...')
+xcurrent.close()
+xdesired.close()
+qcurrent.close()
+error.close()
